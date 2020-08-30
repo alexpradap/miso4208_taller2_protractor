@@ -97,7 +97,8 @@ describe('Proyecto base', () => {
       expect(_allHeroes).toContain(targetHero);
     });
 
-    it(`hero ${targetHero.name} can be found in search`, () => {
+    // PTO 1 y PTO 6 Buscar héroes, navegar a un héroe desde la búsqueda
+    it(`hero ${targetHero.name} can be found and selected from search`, () => {
       element(by.css('a[href="/dashboard"]')).click();
       let _searchBox = getPageElts().searchBox;
       _searchBox.sendKeys(targetHero.name);
@@ -106,6 +107,7 @@ describe('Proyecto base', () => {
       expectHeading(2, targetHero.name.toUpperCase() + ' Details');
     });
 
+    // PTO 3 Editar un héroe
     it(`hero Narco can be edited to be Test`, () => {
       element(by.css('a[href="/dashboard"]')).click();
       element.all(by.css('app-root app-dashboard > div a')).get(0).click();
@@ -119,6 +121,7 @@ describe('Proyecto base', () => {
       expect(_allHeroes).toContain(testHero);
     });
 
+    // PTO 4 Navegar a un héroe desde el dashboard
     it(`Navigate to Test hero detail from Dashboard`, () => {
       element(by.css('a[href="/dashboard"]')).click();
 
@@ -132,16 +135,27 @@ describe('Proyecto base', () => {
     });
   });
 
-  it(`Navigate to Test hero detail from Heroes page`, () => {
+  // PTO 5 Navegar a un héroe desde la lista de héroes
+  it(`Navigate to Test hero detail from Heroes list`, () => {
     element(by.css('a[href="/heroes"]')).click();
-browser.sleep();
+
     element.all(by.css('li>a')).filter(function(elem, index) {
       return elem.getText().then(function(text) {
-        return text === 'Test';
+        return text === '12 Test';
       });
     }).first().click();
 
     expect(element(by.css('h2')).getText()).toContain('TEST Details');
+  });
+
+  //PTO 2 Eliminar un héroe
+  it(`Hero Test can be deleted from Heroes page`, () => {
+    element(by.css('a[href="/heroes"]')).click();
+
+    element(by.css('li>a[ng-reflect-router-link="/detail/12"]+button')).click();
+
+    let _allHeroes = getPageElts().allHeroes.map((el: ElementFinder) => Hero.fromLi(el));
+    expect(_allHeroes).not.toContain({ id: 12, name: 'Test' });
   });
 
 });
