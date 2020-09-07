@@ -1,0 +1,1 @@
+while true; do ps -o %cpu,%mem -ef | grep 'ng e2e' >> cpu.log;date ; sleep 5; done
